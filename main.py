@@ -1,4 +1,5 @@
 from docs_mcp import mcp as docs_mcp_server
+from email_mcp import mcp as email_mcp_server
 from fastapi import FastAPI
 
 from fastapi.middleware.cors import CORSMiddleware
@@ -7,7 +8,9 @@ import uvicorn
 
 @contextlib.asynccontextmanager
 async def lifespan(app: FastAPI):
-    async with docs_mcp_server.session_manager.run():
+    async with contextlib.AsyncExitStack() as stack:
+        await stack.enter_async_context(docs_mcp_server.session_manager.run())
+        await stack.enter_async_context(email_mcp_server.session_manager.run())
         yield
 
 app = FastAPI(lifespan=lifespan)
@@ -23,6 +26,7 @@ app.add_middleware(
 
 
 app.mount("/docs", docs_mcp_server.streamable_http_app())
+app.mount("/emails", email_mcp_server.streamable_http_app())    
 
 if __name__ == "__main__":
     uvicorn.run(app, host="localhost", port=10000, log_level="debug")
