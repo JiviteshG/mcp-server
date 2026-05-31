@@ -1,11 +1,13 @@
 from docs_mcp import mcp as docs_mcp_server
 from fastapi import FastAPI
+
 from fastapi.middleware.cors import CORSMiddleware
 import contextlib
+import uvicorn
 
-@contextlib.contextmanager
+@contextlib.asynccontextmanager
 async def lifespan(app: FastAPI):
-    async with docs_mcp_server.session_manager():
+    async with docs_mcp_server.session_manager.run():
         yield
 
 app = FastAPI(lifespan=lifespan)
@@ -20,9 +22,7 @@ app.add_middleware(
 )
 
 
-def main():
-    # This runs the server (stdio by default)
-    mcp.run("stdio") # Run the server using standard input/output
+app.mount("/docs", docs_mcp_server.streamable_http_app())
 
 if __name__ == "__main__":
-    main()
+    uvicorn.run(app, host="localhost", port=10000, log_level="debug")
