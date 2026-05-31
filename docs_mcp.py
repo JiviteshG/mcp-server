@@ -1,7 +1,7 @@
 from mcp.server.fastmcp import FastMCP
 
 # Create the MCP server instance
-mcp = FastMCP("Mocked Documentation Server")
+mcp = FastMCP("mcp-documentation-server")
 
 # Mocked database function (Internal logic)
 def get_mocked_documentation():
