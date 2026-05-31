@@ -1,4 +1,6 @@
-from mcp_server import mcp
+from docs_mcp import mcp as docs_mcp_server
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 def main():
     # This runs the server (stdio by default)

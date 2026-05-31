@@ -28,5 +28,6 @@ def get_documentation_from_database() -> dict:
 
     return get_mocked_documentation()
 
-if __name__ == "__main__":
-    mcp.run("streamable-http")  # Run the server using standard input/output
+# Used only for local configuration and testing
+# if __name__ == "__main__":
+#     mcp.run("streamable-http")  # Run the server using standard input/output
